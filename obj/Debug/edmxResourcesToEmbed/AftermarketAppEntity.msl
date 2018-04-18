@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="Aftermarket_DataModelStoreContainer" CdmEntityContainer="Aftermarket_Entity">
+    <EntitySetMapping Name="PartsManufacturers">
+      <EntityTypeMapping TypeName="Aftermarket_DataModel.PartsManufacturer">
+        <MappingFragment StoreEntitySet="PartsManufacturer">
+          <ScalarProperty Name="PartManufacturerId" ColumnName="PartManufacturerId" />
+          <ScalarProperty Name="PartManufacturerDescription" ColumnName="PartManufacturerDescription" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PartsMasters">
+      <EntityTypeMapping TypeName="Aftermarket_DataModel.PartsMaster">
+        <MappingFragment StoreEntitySet="PartsMaster">
+          <ScalarProperty Name="PartManufacturerId" ColumnName="PartManufacturerId" />
+          <ScalarProperty Name="PartNumber" ColumnName="PartNumber" />
+          <ScalarProperty Name="PartName" ColumnName="PartName" />
+          <ScalarProperty Name="PartTypeId" ColumnName="PartTypeId" />
+          <ScalarProperty Name="PartDescription" ColumnName="PartDescription" />
+          <ScalarProperty Name="PartMasterId" ColumnName="PartMasterId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PartsTypes">
+      <EntityTypeMapping TypeName="Aftermarket_DataModel.PartsType">
+        <MappingFragment StoreEntitySet="PartsType">
+          <ScalarProperty Name="PartTypeId" ColumnName="PartTypeId" />
+          <ScalarProperty Name="PartTypeDescription" ColumnName="PartTypeDescription" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PartsVehicleMasters">
+      <EntityTypeMapping TypeName="Aftermarket_DataModel.PartsVehicleMaster">
+        <MappingFragment StoreEntitySet="PartsVehicleMaster">
+          <ScalarProperty Name="PartNumber" ColumnName="PartNumber" />
+          <ScalarProperty Name="VehicleManufacturer" ColumnName="VehicleManufacturer" />
+          <ScalarProperty Name="VehicleModelName" ColumnName="VehicleModelName" />
+          <ScalarProperty Name="VehicleDescription" ColumnName="VehicleDescription" />
+          <ScalarProperty Name="VehicleYearFrom" ColumnName="VehicleYearFrom" />
+          <ScalarProperty Name="VehicleYearTo" ColumnName="VehicleYearTo" />
+          <ScalarProperty Name="PartVehicleMasterId" ColumnName="PartVehicleMasterId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="GetListOfMakes" FunctionName="Aftermarket_DataModel.Store.GetListOfMakes">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="Aftermarket_DataModel.GetListOfMakes_Result">
+          <ScalarProperty Name="MakeId" ColumnName="MakeId" />
+          <ScalarProperty Name="Make" ColumnName="Make" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetListOfModelNames" FunctionName="Aftermarket_DataModel.Store.GetListOfModelNames">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="Aftermarket_DataModel.GetListOfModelNames_Result">
+          <ScalarProperty Name="ModelNameId" ColumnName="ModelNameId" />
+          <ScalarProperty Name="ModelName" ColumnName="ModelName" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetListOfSubModels" FunctionName="Aftermarket_DataModel.Store.GetListOfSubModels">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="Aftermarket_DataModel.GetListOfSubModels_Result">
+          <ScalarProperty Name="ModelId" ColumnName="ModelId" />
+          <ScalarProperty Name="YearBegin" ColumnName="YearBegin" />
+          <ScalarProperty Name="YearEnd" ColumnName="YearEnd" />
+          <ScalarProperty Name="Make" ColumnName="Make" />
+          <ScalarProperty Name="ModelName" ColumnName="ModelName" />
+          <ScalarProperty Name="ModelVariant" ColumnName="ModelVariant" />
+          <ScalarProperty Name="Assigned" ColumnName="Assigned" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <EntitySetMapping Name="PartsVehicleXReferences">
+      <EntityTypeMapping TypeName="Aftermarket_DataModel.PartsVehicleXReference">
+        <MappingFragment StoreEntitySet="PartsVehicleXReference">
+          <ScalarProperty Name="PartsVehicleXRefId" ColumnName="PartsVehicleXRefId" />
+          <ScalarProperty Name="ShimId" ColumnName="ShimId" />
+          <ScalarProperty Name="PartsMasterId" ColumnName="PartsMasterId" />
+          <ScalarProperty Name="WasModelId" ColumnName="WasModelId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="UpdateXRef" FunctionName="Aftermarket_DataModel.Store.UpdateXRef" />
+  </EntityContainerMapping>
+</Mapping>

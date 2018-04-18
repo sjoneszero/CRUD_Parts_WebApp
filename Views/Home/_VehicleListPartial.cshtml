@@ -1,0 +1,102 @@
+﻿@model List<Aftermarket_WebApp.GetListOfSubModels_Result>
+
+@if (Model != null)
+{
+        <br />
+
+    using (Ajax.BeginForm("WritetoXref", "Home", FormMethod.Post,
+                                                        new AjaxOptions
+                                                        {
+                                                            InsertionMode = InsertionMode.Replace,
+                                                            HttpMethod = "POST",
+                                                            UpdateTargetId = "dvSaved",
+                                                        }))
+    {
+
+<div class="well">
+    <h4>Assign Models to Part Number - @ViewBag.PartNumber (@ViewBag.PartManu)</h4>
+    <br />
+    <label>PartMasterId</label>
+    <input type="text" name="partid" style="width:50px;" value="@ViewBag.PartMasterId" rea>
+</div>
+<div id="dvSaved" style="height:30px;"></div>
+<table class="table table-striped table-bordered">
+    <tr>
+        
+       
+        <th>
+            ModelId
+
+        </th>
+        <th>
+           Make
+        </th>
+        <th>
+           Model
+        </th>
+        <th>
+            Year Range
+        </th>
+        <th>
+            Variant
+        </th>
+        <th>
+            <center> Assigned</center>
+        </th>
+         </tr>
+
+@for (int i = 0; i < Model.Count; i++)
+{
+    <tr>
+     
+        <td>
+            @Html.TextBox("toassign[" + @i + "].ModelId", Model[i].ModelId, new { @readonly = "readonly"})
+            
+        </td>     
+       
+<td>
+    <b> @Model[i].Make</b>
+        </td>
+        <td>
+    <b>  @Model[i].ModelName</b> 
+
+        </td>
+        <td>
+            @Model[i].YearBegin - @Model[i].YearEnd
+        </td>
+        <td>
+           @Model[i].ModelVariant
+        </td>
+        <td>
+           
+    
+            <center>
+                @Html.CheckBox("toassign[" + @i + "].Assigned", Model[i].Assigned, new { @class = "form-inline" })
+                
+            </center>
+		
+
+          
+       </td>
+         </tr>
+}
+
+</table>
+
+<input type="submit" value="Submit" class="btn btn-success" />
+
+    }
+
+    }
+
+
+
+
+else
+{
+
+    <br /><br />
+<h4>Enter search criteria</h4>
+
+}
+

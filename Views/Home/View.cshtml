@@ -1,0 +1,78 @@
+﻿@model Aftermarket_WebApp.GetListOfSubModels_Result
+
+
+
+
+
+
+    @if (Model == null)
+    {
+
+
+
+    }
+    else
+    {
+
+        <div>
+
+
+            <h4>GetListOfSubModels_Result</h4>
+            <hr />
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.YearBegin)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.YearBegin)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.YearEnd)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.YearEnd)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Make)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Make)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.ModelName)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.ModelName)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.ModelVariant)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.ModelVariant)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Assigned)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Assigned)
+                </dd>
+
+            </dl>
+        </div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ModelId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+    }

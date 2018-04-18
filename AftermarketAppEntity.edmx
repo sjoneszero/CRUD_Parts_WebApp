@@ -1,0 +1,341 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Aftermarket_DataModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="PartsManufacturer">
+          <Key>
+            <PropertyRef Name="PartManufacturerId" />
+          </Key>
+          <Property Name="PartManufacturerId" Type="smallint" Nullable="false" />
+          <Property Name="PartManufacturerDescription" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="PartsMaster">
+          <Key>
+            <PropertyRef Name="PartMasterId" />
+          </Key>
+          <Property Name="PartManufacturerId" Type="smallint" />
+          <Property Name="PartNumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="PartName" Type="nvarchar" MaxLength="255" />
+          <Property Name="PartTypeId" Type="int" />
+          <Property Name="PartDescription" Type="nvarchar" MaxLength="255" />
+          <Property Name="PartMasterId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PartsType">
+          <Key>
+            <PropertyRef Name="PartTypeId" />
+          </Key>
+          <Property Name="PartTypeId" Type="int" Nullable="false" />
+          <Property Name="PartTypeDescription" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="PartsVehicleMaster">
+          <Key>
+            <PropertyRef Name="PartVehicleMasterId" />
+          </Key>
+          <Property Name="PartNumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="VehicleManufacturer" Type="nvarchar" MaxLength="255" />
+          <Property Name="VehicleModelName" Type="nvarchar" MaxLength="255" />
+          <Property Name="VehicleDescription" Type="nvarchar" MaxLength="255" />
+          <Property Name="VehicleYearFrom" Type="int" />
+          <Property Name="VehicleYearTo" Type="int" />
+          <Property Name="PartVehicleMasterId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PartsVehicleXReference">
+          <Key>
+            <PropertyRef Name="PartsVehicleXRefId" />
+          </Key>
+          <Property Name="WasModelId" Type="int" Nullable="false" />
+          <Property Name="PartsMasterId" Type="int" Nullable="false" />
+          <Property Name="ShimId" Type="int" />
+          <Property Name="PartsVehicleXRefId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_PartsMaster_PartManufacturer">
+          <End Role="PartsManufacturer" Type="Self.PartsManufacturer" Multiplicity="0..1" />
+          <End Role="PartsMaster" Type="Self.PartsMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PartsManufacturer">
+              <PropertyRef Name="PartManufacturerId" />
+            </Principal>
+            <Dependent Role="PartsMaster">
+              <PropertyRef Name="PartManufacturerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PartsMaster_PartType">
+          <End Role="PartsType" Type="Self.PartsType" Multiplicity="0..1" />
+          <End Role="PartsMaster" Type="Self.PartsMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PartsType">
+              <PropertyRef Name="PartTypeId" />
+            </Principal>
+            <Dependent Role="PartsMaster">
+              <PropertyRef Name="PartTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="GetListOfMakes" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="GetListOfModelNames" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="MakeId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetListOfSubModels" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ModelNameId" Type="int" Mode="In" />
+          <Parameter Name="PartsMasterId" Type="int" Mode="In" />
+          <Parameter Name="Year" Type="int" Mode="In" />
+        </Function>
+        <Function Name="UpdateXRef" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ModelId" Type="int" Mode="In" />
+          <Parameter Name="PartsMasterId" Type="int" Mode="In" />
+          <Parameter Name="Assigned" Type="bit" Mode="In" />
+        </Function>
+        <EntityContainer Name="Aftermarket_DataModelStoreContainer">
+          <EntitySet Name="PartsManufacturer" EntityType="Self.PartsManufacturer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PartsMaster" EntityType="Self.PartsMaster" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PartsType" EntityType="Self.PartsType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PartsVehicleMaster" EntityType="Self.PartsVehicleMaster" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PartsVehicleXReference" EntityType="Self.PartsVehicleXReference" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_PartsMaster_PartManufacturer" Association="Self.FK_PartsMaster_PartManufacturer">
+            <End Role="PartsManufacturer" EntitySet="PartsManufacturer" />
+            <End Role="PartsMaster" EntitySet="PartsMaster" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PartsMaster_PartType" Association="Self.FK_PartsMaster_PartType">
+            <End Role="PartsType" EntitySet="PartsType" />
+            <End Role="PartsMaster" EntitySet="PartsMaster" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Aftermarket_DataModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="PartsManufacturer">
+          <Key>
+            <PropertyRef Name="PartManufacturerId" />
+          </Key>
+          <Property Name="PartManufacturerId" Type="Int16" Nullable="false" />
+          <Property Name="PartManufacturerDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="PartsMasters" Relationship="Self.FK_PartsMaster_PartManufacturer" FromRole="PartsManufacturer" ToRole="PartsMaster" />
+        </EntityType>
+        <EntityType Name="PartsMaster">
+          <Key>
+            <PropertyRef Name="PartMasterId" />
+          </Key>
+          <Property Name="PartManufacturerId" Type="Int16" />
+          <Property Name="PartNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PartName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="PartTypeId" Type="Int32" />
+          <Property Name="PartDescription" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="PartMasterId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="PartsManufacturer" Relationship="Self.FK_PartsMaster_PartManufacturer" FromRole="PartsMaster" ToRole="PartsManufacturer" />
+          <NavigationProperty Name="PartsType" Relationship="Self.FK_PartsMaster_PartType" FromRole="PartsMaster" ToRole="PartsType" />
+        </EntityType>
+        <EntityType Name="PartsType">
+          <Key>
+            <PropertyRef Name="PartTypeId" />
+          </Key>
+          <Property Name="PartTypeId" Type="Int32" Nullable="false" />
+          <Property Name="PartTypeDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="PartsMasters" Relationship="Self.FK_PartsMaster_PartType" FromRole="PartsType" ToRole="PartsMaster" />
+        </EntityType>
+        <EntityType Name="PartsVehicleMaster">
+          <Key>
+            <PropertyRef Name="PartVehicleMasterId" />
+          </Key>
+          <Property Name="PartNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="VehicleManufacturer" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="VehicleModelName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="VehicleDescription" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="VehicleYearFrom" Type="Int32" />
+          <Property Name="VehicleYearTo" Type="Int32" />
+          <Property Name="PartVehicleMasterId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <Association Name="FK_PartsMaster_PartManufacturer">
+          <End Role="PartsManufacturer" Type="Self.PartsManufacturer" Multiplicity="0..1" />
+          <End Role="PartsMaster" Type="Self.PartsMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PartsManufacturer">
+              <PropertyRef Name="PartManufacturerId" />
+            </Principal>
+            <Dependent Role="PartsMaster">
+              <PropertyRef Name="PartManufacturerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PartsMaster_PartType">
+          <End Role="PartsType" Type="Self.PartsType" Multiplicity="0..1" />
+          <End Role="PartsMaster" Type="Self.PartsMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PartsType">
+              <PropertyRef Name="PartTypeId" />
+            </Principal>
+            <Dependent Role="PartsMaster">
+              <PropertyRef Name="PartTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Aftermarket_Entity" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="PartsManufacturers" EntityType="Self.PartsManufacturer" />
+          <EntitySet Name="PartsMasters" EntityType="Self.PartsMaster" />
+          <EntitySet Name="PartsTypes" EntityType="Self.PartsType" />
+          <EntitySet Name="PartsVehicleMasters" EntityType="Self.PartsVehicleMaster" />
+          <AssociationSet Name="FK_PartsMaster_PartManufacturer" Association="Self.FK_PartsMaster_PartManufacturer">
+            <End Role="PartsManufacturer" EntitySet="PartsManufacturers" />
+            <End Role="PartsMaster" EntitySet="PartsMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PartsMaster_PartType" Association="Self.FK_PartsMaster_PartType">
+            <End Role="PartsType" EntitySet="PartsTypes" />
+            <End Role="PartsMaster" EntitySet="PartsMasters" />
+          </AssociationSet>
+          <FunctionImport Name="GetListOfMakes" ReturnType="Collection(Aftermarket_DataModel.GetListOfMakes_Result)" />
+          <FunctionImport Name="GetListOfModelNames" ReturnType="Collection(Aftermarket_DataModel.GetListOfModelNames_Result)">
+          <Parameter Name="MakeId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetListOfSubModels" ReturnType="Collection(Aftermarket_DataModel.GetListOfSubModels_Result)">
+            <Parameter Name="ModelNameId" Mode="In" Type="Int32" />
+            <Parameter Name="PartsMasterId" Mode="In" Type="Int32" />
+            <Parameter Name="Year" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="PartsVehicleXReferences" EntityType="Aftermarket_DataModel.PartsVehicleXReference" />
+          <FunctionImport Name="UpdateXRef">
+            <Parameter Name="ModelId" Mode="In" Type="Int32" />
+            <Parameter Name="PartsMasterId" Mode="In" Type="Int32" />
+            <Parameter Name="Assigned" Mode="In" Type="Boolean" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="GetListOfMakes_Result">
+          <Property Type="Int32" Name="MakeId" Nullable="false" />
+          <Property Type="String" Name="Make" Nullable="false" MaxLength="24" />
+        </ComplexType>
+        <ComplexType Name="GetListOfModelNames_Result">
+          <Property Type="Int32" Name="ModelNameId" Nullable="false" />
+          <Property Type="String" Name="ModelName" Nullable="false" MaxLength="51" />
+        </ComplexType>
+        <ComplexType Name="GetListOfSubModels_Result">
+          <Property Type="Int32" Name="ModelId" Nullable="false" />
+          <Property Type="Int32" Name="YearBegin" Nullable="true" />
+          <Property Type="Int32" Name="YearEnd" Nullable="true" />
+          <Property Type="String" Name="Make" Nullable="false" MaxLength="24" />
+          <Property Type="String" Name="ModelName" Nullable="false" MaxLength="51" />
+          <Property Type="String" Name="ModelVariant" Nullable="false" MaxLength="312" />
+          <Property Type="Boolean" Name="Assigned" Nullable="true" />
+        </ComplexType>
+        <EntityType Name="PartsVehicleXReference">
+          <Key>
+            <PropertyRef Name="PartsVehicleXRefId" />
+          </Key>
+          <Property Name="WasModelId" Type="Int32" Nullable="false" />
+          <Property Name="PartsMasterId" Type="Int32" Nullable="false" />
+          <Property Name="ShimId" Type="Int32" />
+          <Property Name="PartsVehicleXRefId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Aftermarket_DataModelStoreContainer" CdmEntityContainer="Aftermarket_Entity">
+          <EntitySetMapping Name="PartsManufacturers">
+            <EntityTypeMapping TypeName="Aftermarket_DataModel.PartsManufacturer">
+              <MappingFragment StoreEntitySet="PartsManufacturer">
+                <ScalarProperty Name="PartManufacturerId" ColumnName="PartManufacturerId" />
+                <ScalarProperty Name="PartManufacturerDescription" ColumnName="PartManufacturerDescription" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PartsMasters">
+            <EntityTypeMapping TypeName="Aftermarket_DataModel.PartsMaster">
+              <MappingFragment StoreEntitySet="PartsMaster">
+                <ScalarProperty Name="PartManufacturerId" ColumnName="PartManufacturerId" />
+                <ScalarProperty Name="PartNumber" ColumnName="PartNumber" />
+                <ScalarProperty Name="PartName" ColumnName="PartName" />
+                <ScalarProperty Name="PartTypeId" ColumnName="PartTypeId" />
+                <ScalarProperty Name="PartDescription" ColumnName="PartDescription" />
+                <ScalarProperty Name="PartMasterId" ColumnName="PartMasterId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PartsTypes">
+            <EntityTypeMapping TypeName="Aftermarket_DataModel.PartsType">
+              <MappingFragment StoreEntitySet="PartsType">
+                <ScalarProperty Name="PartTypeId" ColumnName="PartTypeId" />
+                <ScalarProperty Name="PartTypeDescription" ColumnName="PartTypeDescription" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PartsVehicleMasters">
+            <EntityTypeMapping TypeName="Aftermarket_DataModel.PartsVehicleMaster">
+              <MappingFragment StoreEntitySet="PartsVehicleMaster">
+                <ScalarProperty Name="PartNumber" ColumnName="PartNumber" />
+                <ScalarProperty Name="VehicleManufacturer" ColumnName="VehicleManufacturer" />
+                <ScalarProperty Name="VehicleModelName" ColumnName="VehicleModelName" />
+                <ScalarProperty Name="VehicleDescription" ColumnName="VehicleDescription" />
+                <ScalarProperty Name="VehicleYearFrom" ColumnName="VehicleYearFrom" />
+                <ScalarProperty Name="VehicleYearTo" ColumnName="VehicleYearTo" />
+                <ScalarProperty Name="PartVehicleMasterId" ColumnName="PartVehicleMasterId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetListOfMakes" FunctionName="Aftermarket_DataModel.Store.GetListOfMakes">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Aftermarket_DataModel.GetListOfMakes_Result">
+                <ScalarProperty Name="MakeId" ColumnName="MakeId" />
+                <ScalarProperty Name="Make" ColumnName="Make" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetListOfModelNames" FunctionName="Aftermarket_DataModel.Store.GetListOfModelNames">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Aftermarket_DataModel.GetListOfModelNames_Result">
+                <ScalarProperty Name="ModelNameId" ColumnName="ModelNameId" />
+                <ScalarProperty Name="ModelName" ColumnName="ModelName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetListOfSubModels" FunctionName="Aftermarket_DataModel.Store.GetListOfSubModels">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Aftermarket_DataModel.GetListOfSubModels_Result">
+                <ScalarProperty Name="ModelId" ColumnName="ModelId" />
+                <ScalarProperty Name="YearBegin" ColumnName="YearBegin" />
+                <ScalarProperty Name="YearEnd" ColumnName="YearEnd" />
+                <ScalarProperty Name="Make" ColumnName="Make" />
+                <ScalarProperty Name="ModelName" ColumnName="ModelName" />
+                <ScalarProperty Name="ModelVariant" ColumnName="ModelVariant" />
+                <ScalarProperty Name="Assigned" ColumnName="Assigned" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="PartsVehicleXReferences">
+            <EntityTypeMapping TypeName="Aftermarket_DataModel.PartsVehicleXReference">
+              <MappingFragment StoreEntitySet="PartsVehicleXReference">
+                <ScalarProperty Name="PartsVehicleXRefId" ColumnName="PartsVehicleXRefId" />
+                <ScalarProperty Name="ShimId" ColumnName="ShimId" />
+                <ScalarProperty Name="PartsMasterId" ColumnName="PartsMasterId" />
+                <ScalarProperty Name="WasModelId" ColumnName="WasModelId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="UpdateXRef" FunctionName="Aftermarket_DataModel.Store.UpdateXRef" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

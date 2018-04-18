@@ -1,0 +1,138 @@
+﻿@model Aftermarket_WebApp.GetListOfSubModels_Result
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script type="text/javascript">
+
+    // bind State Dropdown when html is loaded
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: "/Home/GetPartManu",
+            datatype: "Json",
+            success: function (data) {
+                $.each(data, function (index, value) {
+                    $('#partmanu').append('<option value="' + value.PartManufacturerId + '">' + value.PartManufacturerDescription + '</option>');
+                });
+            }
+        });
+    });
+
+
+    $(document).ready(function () {
+        $('#partmanu').change(function () {
+            $('#partnumber').empty();
+            $.ajax({
+                type: "POST",
+                url: "/Home/GetPartNumber",
+                datatype: "Json",
+                data: { partmanu: $('#partmanu').val() },
+                success: function (data) {
+                    $('#partnumber').append('<option value>--Select--</option>');
+                    $.each(data, function (index, value) {
+                        $('#partnumber').append('<option value="' + value.PartMasterId + '">' + value.PartNumber + '</option>');
+                    });
+                }
+            });
+        });
+    });
+
+
+
+    // bind State Dropdown when html is loaded
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: "/Home/GetMake",
+            datatype: "Json",
+            success: function (data) {
+                $.each(data, function (index, value) {
+                    $('#make').append('<option value="' + value.MakeId + '">' + value.Make + '</option>');
+                });
+            }
+        });
+    });
+    // bind State Dropdown when html is loaded
+
+    // bind district Dropdown on selection change of State
+    $(document).ready(function () {
+        $('#make').change(function () {
+            $('#model').empty();
+            $.ajax({
+                type: "POST",
+                url: "/Home/GetModel",
+                datatype: "Json",
+                data: { makeid: $('#make').val() },
+                success: function (data) {
+                    $('#selectModel').append('<option value>--Select--</option>');
+                    $.each(data, function (index, value) {
+                        $('#model').append('<option value="' + value.ModelNameId + '">' + value.ModelName + '</option>');
+                    });
+                }
+            });
+        });
+    });
+
+      
+
+
+
+
+
+
+</script>
+
+
+
+@using (Ajax.BeginForm("VehicleList", "Home", FormMethod.Post,
+                                            new AjaxOptions
+                                            {
+                                                InsertionMode = InsertionMode.Replace,
+                                                HttpMethod = "POST",
+                                                UpdateTargetId = "dvResults",
+                                            }))
+{
+
+    <br />
+
+    <div class="form-inline">
+       
+        <div>
+            <div class="col-md-2">
+                @Html.DropDownList("partmanu", new SelectList(string.Empty, "Value", "Text"), "Part Supplier", new { @class = "form-control" })
+            </div>
+            <div class="col-md-2">
+                @Html.DropDownList("partnumber", new SelectList(string.Empty, "Value", "Text"), "Part Number", new { @class = "form-control" })
+            </div>
+            <div class="col-md-2">
+                @Html.DropDownList("make", new SelectList(string.Empty, "Value", "Text"), "WAS Make", new { @class = "form-control" })
+            </div>
+            <div class="col-md-2">
+                @Html.DropDownList("model", new SelectList(string.Empty, "Value", "Text"), "WAS Model", new { @class = "form-control" })
+            </div>
+            <div class="col-md-4">
+                <input type="submit" value="Submit" class="btn btn-success" />
+            </div>
+        </div>
+          </div>
+
+    <hr />
+  
+
+
+}
+
+<hr />
+
+    <div id="dvResults">
+
+        @{Html.RenderPartial("_VehicleListPartial", Model); }
+
+    </div>
+
+
+

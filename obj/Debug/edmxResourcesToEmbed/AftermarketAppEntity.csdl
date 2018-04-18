@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Aftermarket_DataModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="PartsManufacturer">
+    <Key>
+      <PropertyRef Name="PartManufacturerId" />
+    </Key>
+    <Property Name="PartManufacturerId" Type="Int16" Nullable="false" />
+    <Property Name="PartManufacturerDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="PartsMasters" Relationship="Self.FK_PartsMaster_PartManufacturer" FromRole="PartsManufacturer" ToRole="PartsMaster" />
+  </EntityType>
+  <EntityType Name="PartsMaster">
+    <Key>
+      <PropertyRef Name="PartMasterId" />
+    </Key>
+    <Property Name="PartManufacturerId" Type="Int16" />
+    <Property Name="PartNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="PartName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="PartTypeId" Type="Int32" />
+    <Property Name="PartDescription" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="PartMasterId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <NavigationProperty Name="PartsManufacturer" Relationship="Self.FK_PartsMaster_PartManufacturer" FromRole="PartsMaster" ToRole="PartsManufacturer" />
+    <NavigationProperty Name="PartsType" Relationship="Self.FK_PartsMaster_PartType" FromRole="PartsMaster" ToRole="PartsType" />
+  </EntityType>
+  <EntityType Name="PartsType">
+    <Key>
+      <PropertyRef Name="PartTypeId" />
+    </Key>
+    <Property Name="PartTypeId" Type="Int32" Nullable="false" />
+    <Property Name="PartTypeDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="PartsMasters" Relationship="Self.FK_PartsMaster_PartType" FromRole="PartsType" ToRole="PartsMaster" />
+  </EntityType>
+  <EntityType Name="PartsVehicleMaster">
+    <Key>
+      <PropertyRef Name="PartVehicleMasterId" />
+    </Key>
+    <Property Name="PartNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="VehicleManufacturer" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="VehicleModelName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="VehicleDescription" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="VehicleYearFrom" Type="Int32" />
+    <Property Name="VehicleYearTo" Type="Int32" />
+    <Property Name="PartVehicleMasterId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+  </EntityType>
+  <Association Name="FK_PartsMaster_PartManufacturer">
+    <End Role="PartsManufacturer" Type="Self.PartsManufacturer" Multiplicity="0..1" />
+    <End Role="PartsMaster" Type="Self.PartsMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PartsManufacturer">
+        <PropertyRef Name="PartManufacturerId" />
+      </Principal>
+      <Dependent Role="PartsMaster">
+        <PropertyRef Name="PartManufacturerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PartsMaster_PartType">
+    <End Role="PartsType" Type="Self.PartsType" Multiplicity="0..1" />
+    <End Role="PartsMaster" Type="Self.PartsMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PartsType">
+        <PropertyRef Name="PartTypeId" />
+      </Principal>
+      <Dependent Role="PartsMaster">
+        <PropertyRef Name="PartTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="Aftermarket_Entity" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="PartsManufacturers" EntityType="Self.PartsManufacturer" />
+    <EntitySet Name="PartsMasters" EntityType="Self.PartsMaster" />
+    <EntitySet Name="PartsTypes" EntityType="Self.PartsType" />
+    <EntitySet Name="PartsVehicleMasters" EntityType="Self.PartsVehicleMaster" />
+    <AssociationSet Name="FK_PartsMaster_PartManufacturer" Association="Self.FK_PartsMaster_PartManufacturer">
+      <End Role="PartsManufacturer" EntitySet="PartsManufacturers" />
+      <End Role="PartsMaster" EntitySet="PartsMasters" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PartsMaster_PartType" Association="Self.FK_PartsMaster_PartType">
+      <End Role="PartsType" EntitySet="PartsTypes" />
+      <End Role="PartsMaster" EntitySet="PartsMasters" />
+    </AssociationSet>
+    <FunctionImport Name="GetListOfMakes" ReturnType="Collection(Aftermarket_DataModel.GetListOfMakes_Result)" />
+    <FunctionImport Name="GetListOfModelNames" ReturnType="Collection(Aftermarket_DataModel.GetListOfModelNames_Result)">
+      <Parameter Name="MakeId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="GetListOfSubModels" ReturnType="Collection(Aftermarket_DataModel.GetListOfSubModels_Result)">
+      <Parameter Name="ModelNameId" Mode="In" Type="Int32" />
+      <Parameter Name="PartsMasterId" Mode="In" Type="Int32" />
+      <Parameter Name="Year" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <EntitySet Name="PartsVehicleXReferences" EntityType="Aftermarket_DataModel.PartsVehicleXReference" />
+    <FunctionImport Name="UpdateXRef">
+      <Parameter Name="ModelId" Mode="In" Type="Int32" />
+      <Parameter Name="PartsMasterId" Mode="In" Type="Int32" />
+      <Parameter Name="Assigned" Mode="In" Type="Boolean" />
+    </FunctionImport>
+  </EntityContainer>
+  <ComplexType Name="GetListOfMakes_Result">
+    <Property Type="Int32" Name="MakeId" Nullable="false" />
+    <Property Type="String" Name="Make" Nullable="false" MaxLength="24" />
+  </ComplexType>
+  <ComplexType Name="GetListOfModelNames_Result">
+    <Property Type="Int32" Name="ModelNameId" Nullable="false" />
+    <Property Type="String" Name="ModelName" Nullable="false" MaxLength="51" />
+  </ComplexType>
+  <ComplexType Name="GetListOfSubModels_Result">
+    <Property Type="Int32" Name="ModelId" Nullable="false" />
+    <Property Type="Int32" Name="YearBegin" Nullable="true" />
+    <Property Type="Int32" Name="YearEnd" Nullable="true" />
+    <Property Type="String" Name="Make" Nullable="false" MaxLength="24" />
+    <Property Type="String" Name="ModelName" Nullable="false" MaxLength="51" />
+    <Property Type="String" Name="ModelVariant" Nullable="false" MaxLength="312" />
+    <Property Type="Boolean" Name="Assigned" Nullable="true" />
+  </ComplexType>
+  <EntityType Name="PartsVehicleXReference">
+    <Key>
+      <PropertyRef Name="PartsVehicleXRefId" />
+    </Key>
+    <Property Name="WasModelId" Type="Int32" Nullable="false" />
+    <Property Name="PartsMasterId" Type="Int32" Nullable="false" />
+    <Property Name="ShimId" Type="Int32" />
+    <Property Name="PartsVehicleXRefId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+  </EntityType>
+</Schema>

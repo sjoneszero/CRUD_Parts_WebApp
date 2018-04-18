@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Aftermarket_DataModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="PartsManufacturer">
+    <Key>
+      <PropertyRef Name="PartManufacturerId" />
+    </Key>
+    <Property Name="PartManufacturerId" Type="smallint" Nullable="false" />
+    <Property Name="PartManufacturerDescription" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="PartsMaster">
+    <Key>
+      <PropertyRef Name="PartMasterId" />
+    </Key>
+    <Property Name="PartManufacturerId" Type="smallint" />
+    <Property Name="PartNumber" Type="nvarchar" MaxLength="50" />
+    <Property Name="PartName" Type="nvarchar" MaxLength="255" />
+    <Property Name="PartTypeId" Type="int" />
+    <Property Name="PartDescription" Type="nvarchar" MaxLength="255" />
+    <Property Name="PartMasterId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PartsType">
+    <Key>
+      <PropertyRef Name="PartTypeId" />
+    </Key>
+    <Property Name="PartTypeId" Type="int" Nullable="false" />
+    <Property Name="PartTypeDescription" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="PartsVehicleMaster">
+    <Key>
+      <PropertyRef Name="PartVehicleMasterId" />
+    </Key>
+    <Property Name="PartNumber" Type="nvarchar" MaxLength="50" />
+    <Property Name="VehicleManufacturer" Type="nvarchar" MaxLength="255" />
+    <Property Name="VehicleModelName" Type="nvarchar" MaxLength="255" />
+    <Property Name="VehicleDescription" Type="nvarchar" MaxLength="255" />
+    <Property Name="VehicleYearFrom" Type="int" />
+    <Property Name="VehicleYearTo" Type="int" />
+    <Property Name="PartVehicleMasterId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PartsVehicleXReference">
+    <Key>
+      <PropertyRef Name="PartsVehicleXRefId" />
+    </Key>
+    <Property Name="WasModelId" Type="int" Nullable="false" />
+    <Property Name="PartsMasterId" Type="int" Nullable="false" />
+    <Property Name="ShimId" Type="int" />
+    <Property Name="PartsVehicleXRefId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_PartsMaster_PartManufacturer">
+    <End Role="PartsManufacturer" Type="Self.PartsManufacturer" Multiplicity="0..1" />
+    <End Role="PartsMaster" Type="Self.PartsMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PartsManufacturer">
+        <PropertyRef Name="PartManufacturerId" />
+      </Principal>
+      <Dependent Role="PartsMaster">
+        <PropertyRef Name="PartManufacturerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PartsMaster_PartType">
+    <End Role="PartsType" Type="Self.PartsType" Multiplicity="0..1" />
+    <End Role="PartsMaster" Type="Self.PartsMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PartsType">
+        <PropertyRef Name="PartTypeId" />
+      </Principal>
+      <Dependent Role="PartsMaster">
+        <PropertyRef Name="PartTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="GetListOfMakes" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="GetListOfModelNames" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="MakeId" Type="int" Mode="In" />
+  </Function>
+  <Function Name="GetListOfSubModels" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ModelNameId" Type="int" Mode="In" />
+    <Parameter Name="PartsMasterId" Type="int" Mode="In" />
+    <Parameter Name="Year" Type="int" Mode="In" />
+  </Function>
+  <Function Name="UpdateXRef" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ModelId" Type="int" Mode="In" />
+    <Parameter Name="PartsMasterId" Type="int" Mode="In" />
+    <Parameter Name="Assigned" Type="bit" Mode="In" />
+  </Function>
+  <EntityContainer Name="Aftermarket_DataModelStoreContainer">
+    <EntitySet Name="PartsManufacturer" EntityType="Self.PartsManufacturer" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PartsMaster" EntityType="Self.PartsMaster" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PartsType" EntityType="Self.PartsType" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PartsVehicleMaster" EntityType="Self.PartsVehicleMaster" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PartsVehicleXReference" EntityType="Self.PartsVehicleXReference" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_PartsMaster_PartManufacturer" Association="Self.FK_PartsMaster_PartManufacturer">
+      <End Role="PartsManufacturer" EntitySet="PartsManufacturer" />
+      <End Role="PartsMaster" EntitySet="PartsMaster" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PartsMaster_PartType" Association="Self.FK_PartsMaster_PartType">
+      <End Role="PartsType" EntitySet="PartsType" />
+      <End Role="PartsMaster" EntitySet="PartsMaster" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
